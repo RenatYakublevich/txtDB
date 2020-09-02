@@ -1,0 +1,2 @@
+class TableAlreadyCreated(Exception):
+	pass
