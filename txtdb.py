@@ -47,6 +47,22 @@ class TxtDB():
 				final_line += ' | ' + str(element)
 			db.write(final_line)
 
+	def select_all(self,column):
+		try:
+			all_line_db = self.get_all_db()
+
+			index_column = self.get_colums_db().index(column) + 1
+			all_values = []
+
+			for line in all_line_db:
+				all_values.append(line.split('|')[index_column][1:-1])
+			
+			return all_values
+			
+		except ValueError:
+			print('Такого столбца нет!')
+
+
 	def select(self,**kwargs):
 		select = kwargs['select']
 		where = kwargs['where']
@@ -59,7 +75,12 @@ class TxtDB():
 
 	def get_all_db(self):
 		with open(self.source,encoding='utf-8') as all_line:
-			return all_line.read()
+			return all_line.readlines()[2::]
+
+	def get_colums_db(self):
+		with open(self.source,encoding='utf-8') as line:
+			all_colums = line.readline().replace(' ','').replace('\n','').split('|')
+			return all_colums[1::]
 		
 
 		 
@@ -70,8 +91,9 @@ class TxtDB():
 		
 
 
-Db = TxtDB()
-Db.create_table('xxd.txt','d d dx c s as s')
+Db = TxtDB('users.txt')
+
+print(Db.select_all('username'))
 
 
 
