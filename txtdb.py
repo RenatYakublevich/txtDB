@@ -55,20 +55,33 @@ class TxtDB():
 			all_values = []
 
 			for line in all_line_db:
-				all_values.append(line.split('|')[index_column][1:-1])
-			
+				try:
+					value = int(line.split('|')[index_column][1:-1])
+				except ValueError:
+					value = line.split('|')[index_column][1:-1]
+				all_values.append(value)
+
 			return all_values
 			
 		except ValueError:
 			print('Такого столбца нет!')
 
+	def select_where(self,column,where,value_where):
+		index_column = self.get_colums_db().index(column) + 1
+		index_where = self.get_colums_db().index(where) + 1
 
-	def select(self,**kwargs):
-		select = kwargs['select']
-		where = kwargs['where']
+		all_line_db = self.get_all_db()
+		all_values = []
 
-		with open(self.source,encoding='utf-8'):
-			pass
+		for line in all_line_db:
+			line_split = line.split('|')
+			where_in_line = line_split[index_where][1:-1]
+			if where_in_line == value_where:
+				all_values.append(line_split[index_column][1:-1])
+
+		return all_values
+
+
 
 	def get_count_colums(self):
 		return self.count_colums
@@ -81,19 +94,15 @@ class TxtDB():
 		with open(self.source,encoding='utf-8') as line:
 			all_colums = line.readline().replace(' ','').replace('\n','').split('|')
 			return all_colums[1::]
+
+
 		
 
 		 
 
-
-				
-
-		
-
-
 Db = TxtDB('users.txt')
 
-print(Db.select_all('username'))
+print(Db.select_where('password','id','1'))
 
 
 
